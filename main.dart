@@ -41,18 +41,23 @@ class _Home extends State<Home> {
   List<int> pwins = new List(2);
 
   String statinfo = ""; // state inforamtion
+  String player1p = "X"; //player 1 piece
+  String player2p = "O"; //player 2 piece
+  String firstplay = "";
+
   int lway = 0; //line way
   int turn = 1; //turn of players
   int tnumb = 0;
   int restartgp = 1;
   // GAME BOOLEAN STAT
-  bool vxo = false;
-  bool solo = true;
+  bool solo = true; //play mode solo or multiplayer
+  bool px = true; //player piece X or O
 
-  bool dialog = false;
-  bool statinfob = false;
-  bool vpainter = false;
-  bool vcheckbox = true;
+  bool vxo = false; //show the playing ground
+  bool dialog = false; //show the tie dialog
+  bool statinfob = false; //show the text on the bottom
+  bool vpainter = false; //show the line drawing
+  bool vcheckbox = true; //show the checkbox
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +146,10 @@ class _Home extends State<Home> {
                 child: Column(children: <Widget>[
                   CheckboxListTile(
                     selected: true,
-                    title: Text("SOLO"),
+                    title: Text("SOLO",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
                     value: solo,
                     onChanged: (bool value) {
                       setState(() {
@@ -149,8 +157,60 @@ class _Home extends State<Home> {
                       });
                     },
                   ),
+                  Visibility(
+                      visible: solo,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: width / 5,
+                          ),
+                          Transform.scale(
+                            scale: 2.0,
+                            child: Checkbox(
+                              value: px,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  px = true;
+
+                                  player1p = "X";
+                                  player2p = "O";
+                                });
+                              },
+                            ),
+                          ),
+                          Text(
+                            "X",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: width / 5,
+                          ),
+                          Transform.scale(
+                            scale: 2.0,
+                            child: Checkbox(
+                              value: !px,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  px = false;
+                                  player1p = "O";
+                                  player2p = "X";
+                                });
+                              },
+                            ),
+                          ),
+                          Text(
+                            "O",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )),
                   CheckboxListTile(
-                    title: Text("MULTIPLAYER"),
+                    title: Text("MULTIPLAYER",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
                     value: !solo,
                     onChanged: (bool value) {
                       setState(() {
@@ -158,6 +218,112 @@ class _Home extends State<Home> {
                       });
                     },
                   ),
+                  Visibility(
+                      visible: !solo,
+                      child: Column(children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: width / 5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "PLAYER 1 ",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Transform.scale(
+                              scale: 2.0,
+                              child: Checkbox(
+                                value: px,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    px = true;
+                                    player1p = "X";
+                                    player2p = "O";
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              "X",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                            Transform.scale(
+                              scale: 2.0,
+                              child: Checkbox(
+                                value: !px,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    px = false;
+                                    player1p = "O";
+                                    player2p = "X";
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              "O",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: width / 5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "PLAYER 2 ",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Transform.scale(
+                              scale: 2.0,
+                              child: Checkbox(
+                                value: !px,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    px = false;
+                                    player1p = "O";
+                                    player2p = "X";
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              "X",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                            Transform.scale(
+                              scale: 2.0,
+                              child: new Checkbox(
+                                value: px,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    px = true;
+                                    player1p = "X";
+                                    player2p = "O";
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              "O",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                      ])),
                   RaisedButton(
                     onPressed: () {
                       setState(() {
@@ -245,15 +411,16 @@ class _Home extends State<Home> {
         lpos[2] = width - 58;
         lpos[3] = dinv + 8 + ((i - 1) * (width / 3));
       }
-    }
+    } //  horizontal lines
     for (var i = 1; i <= 3; i++) {
+      var nwidth = width - 10;
       if (lway == i + 3) {
-        lpos[0] = i * (width / 3) - 62;
+        lpos[0] = i * (nwidth / 3) - 53;
         lpos[1] = dinv + 12;
-        lpos[2] = i * (width / 3) - 62;
+        lpos[2] = i * (nwidth / 3) - 53;
         lpos[3] = dinv + 12 + ((width / 3) * 2);
       }
-    }
+    } //  vertical lines
     if (lway == 7) {
       lpos[0] = (width / 3) - 58;
       lpos[1] = dinv + 12;
@@ -277,9 +444,9 @@ class _Home extends State<Home> {
     // BOT MOVE FUNCTION
     for (var i = 0; i <= 8; i++) {
       if (gameBuVa[i].str == "") {
-        gameBuVa[i].str = "O";
+        gameBuVa[i].str = player2p;
 
-        if (checker("O")) {
+        if (checker("$player2p")) {
           gameBuVa[i].str = "";
           return i;
         } else {
@@ -289,9 +456,9 @@ class _Home extends State<Home> {
     }
     for (var i = 0; i <= 8; i++) {
       if (gameBuVa[i].str == "") {
-        gameBuVa[i].str = "X";
+        gameBuVa[i].str = "$player1p";
 
-        if (checker("X")) {
+        if (checker("$player1p")) {
           gameBuVa[i].str = "";
           return i;
         } else {
@@ -322,33 +489,34 @@ class _Home extends State<Home> {
     } else {
       if (solo) {
         if (gameBuVa[index].str == "") {
-          gameBuVa[index].str = "X";
+          gameBuVa[index].str = "$player1p";
           tnumb++;
 
-          if (checker("X")) {
+          if (checker("$player1p")) {
             pwins[0] += 1;
             showR("P1[🏆 WINNER]: ${pwins[0]} WINS / Bot: ${pwins[1]} WINS");
           }
-          if (tnumb != 9 && !checker("X")) {
-            gameBuVa[botsama()].str = "O";
+          // sleep(const Duration(milliseconds: 10000));
+          if (tnumb != 9 && !checker("$player1p")) {
+            gameBuVa[botsama()].str = "$player2p";
             tnumb++;
           }
         }
       } else {
         if (turn == 1 && gameBuVa[index].str == "") {
-          gameBuVa[index].str = "X";
+          gameBuVa[index].str = "$player1p";
           tnumb++;
           turn = 2;
-          statinfo = "P2(O) TURN";
+          statinfo = "P2($player2p) TURN";
         } else if (turn == 2 && gameBuVa[index].str == "") {
-          gameBuVa[index].str = "O";
+          gameBuVa[index].str = "$player2p";
           tnumb++;
           turn = 1;
-          statinfo = "P1(X) TURN";
+          statinfo = "P1($player1p) TURN";
         }
       }
 
-      if (checker("X")) {
+      if (checker("$player1p")) {
         pwins[0] += 1;
         if (solo) {
           showR("P1[🏆 WINNER]: ${pwins[0]} WINS / Bot: ${pwins[1]} WINS");
@@ -356,7 +524,7 @@ class _Home extends State<Home> {
           showR("P1[🏆 WINNER]: ${pwins[0]} WINS / P2: ${pwins[1]} WINS");
         }
       }
-      if (checker("O")) {
+      if (checker("$player2p")) {
         pwins[1] += 1;
         if (solo) {
           showR("P1: ${pwins[0]} WINS / Bot[🏆 WINNER]: ${pwins[1]} WINS");
