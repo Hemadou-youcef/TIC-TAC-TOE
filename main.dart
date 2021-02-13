@@ -148,8 +148,7 @@ class _Home extends State<Home> {
                     selected: true,
                     title: Text("SOLO",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
+                            fontWeight: FontWeight.bold, fontSize: 20)),
                     value: solo,
                     onChanged: (bool value) {
                       setState(() {
@@ -168,6 +167,7 @@ class _Home extends State<Home> {
                             scale: 2.0,
                             child: Checkbox(
                               value: px,
+                              activeColor: Colors.indigo,
                               onChanged: (bool value) {
                                 setState(() {
                                   px = true;
@@ -190,6 +190,7 @@ class _Home extends State<Home> {
                             scale: 2.0,
                             child: Checkbox(
                               value: !px,
+                              activeColor: Colors.greenAccent,
                               onChanged: (bool value) {
                                 setState(() {
                                   px = false;
@@ -209,8 +210,7 @@ class _Home extends State<Home> {
                   CheckboxListTile(
                     title: Text("MULTIPLAYER",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
+                            fontWeight: FontWeight.bold, fontSize: 20)),
                     value: !solo,
                     onChanged: (bool value) {
                       setState(() {
@@ -238,6 +238,7 @@ class _Home extends State<Home> {
                               scale: 2.0,
                               child: Checkbox(
                                 value: px,
+                                activeColor: Colors.indigo,
                                 onChanged: (bool value) {
                                   setState(() {
                                     px = true;
@@ -256,6 +257,7 @@ class _Home extends State<Home> {
                               scale: 2.0,
                               child: Checkbox(
                                 value: !px,
+                                activeColor: Colors.greenAccent,
                                 onChanged: (bool value) {
                                   setState(() {
                                     px = false;
@@ -289,6 +291,7 @@ class _Home extends State<Home> {
                               scale: 2.0,
                               child: Checkbox(
                                 value: !px,
+                                activeColor: Colors.indigo,
                                 onChanged: (bool value) {
                                   setState(() {
                                     px = false;
@@ -307,6 +310,7 @@ class _Home extends State<Home> {
                               scale: 2.0,
                               child: new Checkbox(
                                 value: px,
+                                activeColor: Colors.greenAccent,
                                 onChanged: (bool value) {
                                   setState(() {
                                     px = true;
