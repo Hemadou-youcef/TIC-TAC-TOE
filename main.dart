@@ -466,6 +466,9 @@ class _Home extends State<Home> {
         }
       }
     }
+    if (gameBuVa[4].str == "") {
+      return 4;
+    }
     for (var i = 0; i <= 8; i++) {
       Random rnd = new Random();
       int min = 0, max = 8;
