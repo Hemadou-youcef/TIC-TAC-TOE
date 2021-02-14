@@ -39,6 +39,10 @@ class _Home extends State<Home> {
   ]; // Game Button Values
   List<double> lpos = new List(4);
   List<int> pwins = new List(2);
+  List<List<int>> evoMatrix = new List();
+  List<int> wrongmove = new List();
+  List<int> correctmove = new List();
+  var moves = {0: 0, 1: 1, 2: 0, 3: 1, 4: 4, 5: 1, 6: 0, 7: 1, 8: 0};
 
   String statinfo = ""; // state inforamtion
   String player1p = "X"; //player 1 piece
@@ -49,6 +53,7 @@ class _Home extends State<Home> {
   int turn = 1; //turn of players
   int tnumb = 0;
   int restartgp = 1;
+  int ngame = 0;
   // GAME BOOLEAN STAT
   bool solo = true; //play mode solo or multiplayer
   bool px = true; //player piece X or O
@@ -86,7 +91,7 @@ class _Home extends State<Home> {
                       child: Text("PLAY AGAIN"),
                       onPressed: () {
                         setState(() {
-                          minrestart();
+                          minirestart();
                         });
                       },
                     ),
@@ -331,6 +336,14 @@ class _Home extends State<Home> {
                   RaisedButton(
                     onPressed: () {
                       setState(() {
+                        if (evoMatrix.length == 0) {
+                          evoMatrix.add(new List());
+                        } else {
+                          if (evoMatrix[ngame].length != 0) {
+                            evoMatrix.add(new List());
+                          }
+                        }
+
                         pwins[0] = 0;
                         pwins[1] = 0;
                         vxo = true;
@@ -446,6 +459,7 @@ class _Home extends State<Home> {
 
   int botsama() {
     // BOT MOVE FUNCTION
+    Random rnd = new Random();
     for (var i = 0; i <= 8; i++) {
       if (gameBuVa[i].str == "") {
         gameBuVa[i].str = player2p;
@@ -473,8 +487,69 @@ class _Home extends State<Home> {
     if (gameBuVa[4].str == "") {
       return 4;
     }
-    for (var i = 0; i <= 8; i++) {
-      Random rnd = new Random();
+
+    for (var i = 0; i < evoMatrix.length; i++) {
+      if (evoMatrix[i][evoMatrix[i].length - 1] == -1) {
+        print("checker: ${evoMatrix[evoMatrix.length - 1].length}");
+        for (var j = 0; j <= evoMatrix[evoMatrix.length - 1].length - 1; j++) {
+          print("info: ${moves[evoMatrix[evoMatrix.length - 1][j]]}");
+          print("info 2: ${moves[evoMatrix[i][j]]}");
+          if (moves[evoMatrix[evoMatrix.length - 1][j]] ==
+              moves[evoMatrix[i][j]]) {
+            print("J is $j");
+            if (j >= 2) {
+              print(
+                  "hello ${evoMatrix[i][j]} --- ${evoMatrix[i][j + 1]} ---movestat = ${movestat(evoMatrix[i][j], evoMatrix[i][j + 1])}");
+              wrongmove.add(movestat(evoMatrix[i][j], evoMatrix[i][j + 1]));
+            }
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    print(evoMatrix);
+    print("Wrong move :$wrongmove");
+    if (wrongmove.length > 0) {
+      for (var i = 0; i <= 8; i++) {
+        bool pass = true;
+        for (var j = 0; j < wrongmove.length; j++) {
+          if (movestat(
+                  evoMatrix[evoMatrix.length - 1]
+                      [evoMatrix[evoMatrix.length - 1].length - 1],
+                  i) ==
+              wrongmove[j]) {
+            pass = false;
+            break;
+          }
+        }
+        if (pass) {
+          correctmove.add(i);
+        }
+      }
+    }
+    print("Correct move :$correctmove");
+    print("--------------------");
+    if (correctmove.length > 0) {
+      for (var i = 0; i < correctmove.length; i++) {
+        int min = 0, max = correctmove.length - 1;
+        int range = min + rnd.nextInt(max - min);
+        if (gameBuVa[range].str == "") {
+          correctmove.removeRange(0, correctmove.length - 1);
+          return range;
+        } else {
+          correctmove.removeAt(range);
+        }
+      }
+    }
+    for (var i = 0; i < 16; i++) {
+      int min = 0, max = 7;
+      int range = min + rnd.nextInt(max - min);
+      if (gameBuVa[range].str == "" && moves[range] == 0) {
+        return range;
+      }
+    }
+    for (var i = 0; i < 16; i++) {
       int min = 0, max = 8;
       int range = min + rnd.nextInt(max - min);
       if (gameBuVa[range].str == "") {
@@ -484,11 +559,57 @@ class _Home extends State<Home> {
     return null;
   }
 
+  int movestat(int pnum, int cnum) {
+    if (cnum == 4) {
+      return 0;
+    } else {
+      if (pnum == 0 || pnum == 8) {
+        if (pnum == cnum) {
+          return 1;
+        } else if (cnum == 2 || cnum == 6) {
+          return 2;
+        } else if (pnum < cnum) {
+          if (cnum == 1 || cnum == 3) {
+            return 3;
+          } else {
+            return 4;
+          }
+        } else {
+          if (cnum == 5 || cnum == 7) {
+            return 3;
+          } else {
+            return 4;
+          }
+        }
+      } else if (pnum == 2 || pnum == 6) {
+        if (pnum == cnum) {
+          return 1;
+        } else if (cnum == 2 || cnum == 6) {
+          return 2;
+        } else if (pnum < 4) {
+          if (cnum == 1 || cnum == 5) {
+            return 3;
+          } else {
+            return 4;
+          }
+        } else {
+          if (cnum == 3 || cnum == 7) {
+            return 3;
+          } else {
+            return 4;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
   void gamemode(int index) {
     // GAME MODE FUNCTION
     if (tnumb == 9 || checker("O") || checker("X")) {
       if (restartgp == 2) {
-        minrestart();
+        minirestart();
       } else {
         restartgp++;
         statinfo = "TAP ONE MORE TIME TO RESTART";
@@ -499,15 +620,15 @@ class _Home extends State<Home> {
           gameBuVa[index].str = "$player1p";
           tnumb++;
 
-          if (checker("$player1p")) {
-            pwins[0] += 1;
-            showR("P1[🏆 WINNER]: ${pwins[0]} WINS / Bot: ${pwins[1]} WINS");
-          }
-          // sleep(const Duration(milliseconds: 10000));
+          evoMatrix[ngame].add(index);
+
+          var botchoose = botsama();
           if (tnumb != 9 && !checker("$player1p")) {
-            gameBuVa[botsama()].str = "$player2p";
+            gameBuVa[botchoose].str = "$player2p";
             tnumb++;
           }
+
+          evoMatrix[ngame].add(botchoose);
         }
       } else {
         if (turn == 1 && gameBuVa[index].str == "") {
@@ -521,6 +642,7 @@ class _Home extends State<Home> {
           turn = 1;
           statinfo = "P1($player1p) TURN";
         }
+        evoMatrix[ngame].add(index);
       }
 
       if (checker("$player1p")) {
@@ -530,6 +652,7 @@ class _Home extends State<Home> {
         } else {
           showR("P1[🏆 WINNER]: ${pwins[0]} WINS / P2: ${pwins[1]} WINS");
         }
+        evoMatrix[ngame].add(-1);
       }
       if (checker("$player2p")) {
         pwins[1] += 1;
@@ -546,7 +669,9 @@ class _Home extends State<Home> {
         vpainter = false;
         dialog = true;
         showR("TIE");
+        evoMatrix[ngame].add(10);
       }
+      print(evoMatrix);
     }
   }
 
@@ -558,7 +683,7 @@ class _Home extends State<Home> {
     statinfo = stat;
   }
 
-  void minrestart() {
+  void minirestart() {
     painter.paintL(painter, null, null, null, null);
     vxo = true;
     dialog = false;
@@ -568,6 +693,10 @@ class _Home extends State<Home> {
     tnumb = 0;
     turn = 1;
     restartgp = 1;
+    if (evoMatrix[ngame].length != 0) {
+      evoMatrix.add(new List());
+      ngame++;
+    }
 
     if (solo) {
       statinfo = "P1: ${pwins[0]} WINS / Bot: ${pwins[1]} WINS";
@@ -591,6 +720,14 @@ class _Home extends State<Home> {
     turn = 1;
     restartgp = 1;
 
+    pwins[0] = 0;
+    pwins[1] = 0;
+
+    if (evoMatrix[ngame].length != 0) {
+      evoMatrix.add(new List());
+      ngame++;
+    }
+
     statinfo = "";
     lway = 0;
 
@@ -599,6 +736,7 @@ class _Home extends State<Home> {
     statinfob = false;
     vpainter = false;
     vcheckbox = true;
+    print(evoMatrix);
   }
 }
 
