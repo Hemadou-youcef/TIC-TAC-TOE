@@ -22,9 +22,9 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   // CLASSES CALL
-  PainterLines painter = new PainterLines();
+  PainterLines painter = new PainterLines(); // painter class
   // INFORAMATION ABOUT SCREEN SIZE
-  double width;
+  double width; // the width of the screen
   // THE VALUES OF THE GAME
   List<GameButtonValue> gameBuVa = <GameButtonValue>[
     new GameButtonValue(""),
@@ -37,18 +37,18 @@ class _Home extends State<Home> {
     new GameButtonValue(""),
     new GameButtonValue(""),
   ]; // Game Button Values
-  List<double> lpos = new List(4);
-  List<int> pwins = new List(2);
 
-  String statinfo = ""; // state inforamtion
+  List<double> lpos = new List(4); // lines positions
+  List<int> pwins = new List(2); // player wins counter
+
+  String statinfo = ""; // state information
   String player1p = "X"; //player 1 piece
   String player2p = "O"; //player 2 piece
-  String firstplay = "";
 
   int lway = 0; //line way
   int turn = 1; //turn of players
-  int tnumb = 0;
-  int restartgp = 1;
+  int tnumb = 0; // number of moves
+  int restartgp = 1; // restart number
   // GAME BOOLEAN STAT
   bool solo = true; //play mode solo or multiplayer
   bool px = true; //player piece X or O
@@ -67,101 +67,171 @@ class _Home extends State<Home> {
         title: Center(child: Text("XO GAME")),
         backgroundColor: Color.fromRGBO(19, 38, 57, 1),
       ),
-      body: SingleChildScrollView(
-        child: new GestureDetector(
-          onTap: () {
-            setState(() {
-              gamemode(0);
-            });
-          },
-          child: Column(
-            children: <Widget>[
-              Visibility(
-                visible: dialog,
-                child: CupertinoAlertDialog(
-                  title: Text("$statinfo"),
-                  content: Text("P1: ${pwins[0]} WIN / P2: ${pwins[1]} WIN"),
-                  actions: [
-                    CupertinoDialogAction(
-                      child: Text("PLAY AGAIN"),
-                      onPressed: () {
-                        setState(() {
-                          minrestart();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: vxo,
-                child: SizedBox(
-                  height: width + 50,
-                  child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 1,
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      padding: EdgeInsets.all(10),
-                      itemCount: 9,
-                      itemBuilder: (context, index) {
-                        return new RaisedButton(
-                          onPressed: () {
-                            setState(() {
-                              gamemode(index);
-                            });
-                          },
-                          child: Text(
-                            gameBuVa[index].str,
-                            style: TextStyle(fontSize: 60, color: Colors.white),
-                          ),
-                          color: Color.fromRGBO(45, 89, 134, 1),
-                        );
-                      }),
-                ),
-              ),
-              Visibility(
-                visible: vpainter,
-                child: CustomPaint(
-                  painter: painter,
-                  child: Container(
-                    width: width,
-                    height: 0,
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: statinfob,
-                child: Center(
-                  child: Text(
-                    "$statinfo",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: vcheckbox,
-                child: Column(children: <Widget>[
-                  CheckboxListTile(
-                    selected: true,
-                    title: Text("SOLO",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                    value: solo,
-                    onChanged: (bool value) {
+      body: new GestureDetector(
+        onTap: () {
+          setState(() {
+            gamemode(0);
+          });
+        },
+        child: Column(
+          children: <Widget>[
+            Visibility(
+              visible: dialog,
+              child: CupertinoAlertDialog(
+                title: Text("$statinfo"),
+                content: Text("P1: ${pwins[0]} WIN / P2: ${pwins[1]} WIN"),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text("PLAY AGAIN"),
+                    onPressed: () {
                       setState(() {
-                        solo = true;
+                        minrestart();
                       });
                     },
                   ),
-                  Visibility(
-                      visible: solo,
-                      child: Row(
+                ],
+              ),
+            ),
+            Visibility(
+              visible: vxo,
+              child: SizedBox(
+                height: width + 50,
+                child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 1,
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    padding: EdgeInsets.all(10),
+                    itemCount: 9,
+                    itemBuilder: (context, index) {
+                      return new RaisedButton(
+                        onPressed: () {
+                          setState(() {
+                            gamemode(index);
+                          });
+                        },
+                        child: Text(
+                          gameBuVa[index].str,
+                          style: TextStyle(fontSize: 60, color: Colors.white),
+                        ),
+                        color: Color.fromRGBO(45, 89, 134, 1),
+                      );
+                    }),
+              ),
+            ),
+            Visibility(
+              visible: vpainter,
+              child: CustomPaint(
+                painter: painter,
+                child: Container(
+                  width: width,
+                  height: 0,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: statinfob,
+              child: Center(
+                child: Text(
+                  "$statinfo",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: vcheckbox,
+              child: Column(children: <Widget>[
+                CheckboxListTile(
+                  selected: true,
+                  title: Text("SOLO",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  value: solo,
+                  onChanged: (bool value) {
+                    setState(() {
+                      solo = true;
+                    });
+                  },
+                ),
+                Visibility(
+                    visible: solo,
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: width / 5,
+                        ),
+                        Transform.scale(
+                          scale: 2.0,
+                          child: Checkbox(
+                            value: px,
+                            activeColor: Colors.indigo,
+                            onChanged: (bool value) {
+                              setState(() {
+                                px = true;
+
+                                player1p = "X";
+                                player2p = "O";
+                              });
+                            },
+                          ),
+                        ),
+                        Text(
+                          "X",
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: width / 5,
+                        ),
+                        Transform.scale(
+                          scale: 2.0,
+                          child: Checkbox(
+                            value: !px,
+                            activeColor: Colors.greenAccent,
+                            onChanged: (bool value) {
+                              setState(() {
+                                px = false;
+                                player1p = "O";
+                                player2p = "X";
+                              });
+                            },
+                          ),
+                        ),
+                        Text(
+                          "O",
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )),
+                CheckboxListTile(
+                  title: Text("MULTIPLAYER",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  value: !solo,
+                  onChanged: (bool value) {
+                    setState(() {
+                      solo = false;
+                    });
+                  },
+                ),
+                Visibility(
+                    visible: !solo,
+                    child: Column(children: <Widget>[
+                      Row(
                         children: <Widget>[
                           SizedBox(
                             width: width / 5,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              "PLAYER 1 ",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Transform.scale(
                             scale: 2.0,
@@ -171,7 +241,6 @@ class _Home extends State<Home> {
                               onChanged: (bool value) {
                                 setState(() {
                                   px = true;
-
                                   player1p = "X";
                                   player2p = "O";
                                 });
@@ -182,9 +251,6 @@ class _Home extends State<Home> {
                             "X",
                             style: TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: width / 5,
                           ),
                           Transform.scale(
                             scale: 2.0,
@@ -206,146 +272,78 @@ class _Home extends State<Home> {
                                 fontSize: 30, fontWeight: FontWeight.bold),
                           ),
                         ],
-                      )),
-                  CheckboxListTile(
-                    title: Text("MULTIPLAYER",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                    value: !solo,
-                    onChanged: (bool value) {
-                      setState(() {
-                        solo = false;
-                      });
-                    },
-                  ),
-                  Visibility(
-                      visible: !solo,
-                      child: Column(children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: width / 5,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                "PLAYER 1 ",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 2.0,
-                              child: Checkbox(
-                                value: px,
-                                activeColor: Colors.indigo,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    px = true;
-                                    player1p = "X";
-                                    player2p = "O";
-                                  });
-                                },
-                              ),
-                            ),
-                            Text(
-                              "X",
+                      ),
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: width / 5,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              "PLAYER 2 ",
                               style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            Transform.scale(
-                              scale: 2.0,
-                              child: Checkbox(
-                                value: !px,
-                                activeColor: Colors.greenAccent,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    px = false;
-                                    player1p = "O";
-                                    player2p = "X";
-                                  });
-                                },
-                              ),
+                          ),
+                          Transform.scale(
+                            scale: 2.0,
+                            child: Checkbox(
+                              value: !px,
+                              activeColor: Colors.indigo,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  px = false;
+                                  player1p = "O";
+                                  player2p = "X";
+                                });
+                              },
                             ),
-                            Text(
-                              "O",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "X",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                          Transform.scale(
+                            scale: 2.0,
+                            child: new Checkbox(
+                              value: px,
+                              activeColor: Colors.greenAccent,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  px = true;
+                                  player1p = "X";
+                                  player2p = "O";
+                                });
+                              },
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: width / 5,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                "PLAYER 2 ",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 2.0,
-                              child: Checkbox(
-                                value: !px,
-                                activeColor: Colors.indigo,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    px = false;
-                                    player1p = "O";
-                                    player2p = "X";
-                                  });
-                                },
-                              ),
-                            ),
-                            Text(
-                              "X",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                            Transform.scale(
-                              scale: 2.0,
-                              child: new Checkbox(
-                                value: px,
-                                activeColor: Colors.greenAccent,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    px = true;
-                                    player1p = "X";
-                                    player2p = "O";
-                                  });
-                                },
-                              ),
-                            ),
-                            Text(
-                              "O",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                      ])),
-                  RaisedButton(
-                    onPressed: () {
-                      setState(() {
-                        pwins[0] = 0;
-                        pwins[1] = 0;
-                        vxo = true;
-                        statinfob = true;
-                        vpainter = true;
-                        vcheckbox = false;
-                        dialog = false;
-                      });
-                    },
-                    child: Text("PLAY"),
-                  )
-                ]),
-              )
-            ],
-          ),
+                          ),
+                          Text(
+                            "O",
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    ])),
+                RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      pwins[0] = 0;
+                      pwins[1] = 0;
+                      vxo = true;
+                      statinfob = true;
+                      vpainter = true;
+                      vcheckbox = false;
+                      dialog = false;
+                    });
+                  },
+                  child: Text("PLAY"),
+                )
+              ]),
+            )
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -499,11 +497,6 @@ class _Home extends State<Home> {
           gameBuVa[index].str = "$player1p";
           tnumb++;
 
-          if (checker("$player1p")) {
-            pwins[0] += 1;
-            showR("P1[🏆 WINNER]: ${pwins[0]} WINS / Bot: ${pwins[1]} WINS");
-          }
-          // sleep(const Duration(milliseconds: 10000));
           if (tnumb != 9 && !checker("$player1p")) {
             gameBuVa[botsama()].str = "$player2p";
             tnumb++;
@@ -590,6 +583,9 @@ class _Home extends State<Home> {
     tnumb = 0;
     turn = 1;
     restartgp = 1;
+
+    pwins[0] = 0;
+    pwins[1] = 0;
 
     statinfo = "";
     lway = 0;
